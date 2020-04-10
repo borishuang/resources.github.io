@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>布局</title>
+<link rel="stylesheet" href="https://unpkg.com/mint-ui@2.2.13/lib/style.css">
+<!-- 引入组件库 -->
+<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+<script src="https://unpkg.com/mint-ui@2.2.13/lib/index.js"></script>
+<script src="https://github.com/borishuang/kids_code/blob/master/js/common.js"></script>
+<script src="./js/jquery.min.js"></script>
+<style lang="less" scoped>
+    .index_page .tab_box .tab {
+        width: 33.33%;
+    }
+
+    .tab_box {
+        overflow: hidden;
+        background: #fff;
+        margin-bottom: 10px;
+    }
+    .tab_box .tab {
+        width: 50%;
+        float: left;
+        text-align: center;
+        padding: 10px 0 12px;
+    }
+    .tab_box .tab img {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+    }
+    .tab_box .tab p {
+        font-size: 13px;
+        color: #333;
+        margin-top: 4px;
+        line-height: 1;
+    }
+
+    .index_page .cnt_wrap {
+        margin-bottom: 10px;
+    }
+    .index_page .cnt_wrap:last-child {
+        margin-bottom: 0;
+    }
+
+    .banner_box {
+        padding: 10px 10px 20px;
+    }
+
+    .banner-image {
+        height: 127px;
+    }
+
+    .banner {
+        background: #fff;
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+        height: 127px;
+    }
+
+    .swiper-slide {
+        -webkit-flex-shrink: 0;
+        -ms-flex-negative: 0;
+        flex-shrink: 0;
+        width: 100%;
+        height: 100%;
+        -webkit-transition-property: -webkit-transform;
+        transition-property: -webkit-transform;
+        -o-transition-property: transform;
+        transition-property: transform;
+        transition-property: transform, -webkit-transform;
+    }
+
+    .swiper-container {
+        margin-left: auto;
+        margin-right: auto;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+    }
+
+    .swiper_wrap {
+        width: 100%;
+    }
+
+    .swiper_wrap img {
+        display: block;
+        width: 100%;
+    }
+
+    .tit {
+        padding: 0 15px;
+        padding-top: 10px;
+        line-height: 35px;
+        overflow: hidden;
+    }
+    .tit h3 {
+        font-size: 16px;
+        color: #000;
+        float: left;
+        font-weight: bold;
+    }
+    .tit .btn_more {
+        display: block;
+        width: 15px;
+        height: 15px;
+        background: url(images/icon_btn_more.png) no-repeat;
+        background-size: 100%;
+        float: right;
+        margin-top: 10px;
+    }
+
+    ul {
+        padding: 0;
+        margin: 0;
+    }
+
+    .hot_box li {
+        list-style: none;
+        padding: 10px 15px 10px;
+    }
+
+    .hot_box li .info {
+        font-size: 17px;
+        color: #000;
+        line-height: 24px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-top: 11px;
+    }
+    .hot_box li .sub_info {
+        font-size: 16px;
+        color: #666;
+        line-height: 24px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /*display: box;*/
+        display: -webkit-box;
+        box-orient: vertical;
+        -webkit-box-orient: vertical;
+        line-clamp: 2;
+        -webkit-line-clamp: 2;
+        margin-top: 12px;
+    }
+</style>
+
+</head>
+<body>
+    <div id="main">
+        <div class="index_page">
+            <div class="tab_box">
+                <div @click="toCourseList(0)" class="tab">
+                    <img src="images/Hicon_portfolio.png">
+                    <p>Scratch</p>
+                </div>
+                <div @click="toCourseList(1)" class="tab">
+                    <img src="images/Hicon_view.png">
+                    <p>Python</p>
+                </div>
+                <div @click="toCourseList(2)" class="tab">
+                    <img src="images/Hicon_question.png">
+                    <p>Javascript</p>
+                </div>
+            </div>
+      
+            <!-- 轮播图开始 -->
+            <div class="banner_box">
+                <div class="swiper-container swiper_wrap">
+                    <mt-swipe class="banner" :auto="4000" v-if="!isBannerEmpty">
+                        <mt-swipe-item class="swiper-slide" v-for="banner in bannerList">
+                            <img class="banner-image" :src="banner.imgUrl" alt="" @click="toCourseList(banner.index)" />
+                        </mt-swipe-item>
+                    </mt-swipe>
+                </div>
+            </div>
+            <!-- 轮播图结束 -->
+      
+            <!-- 热门Scratch教程-->
+            <div class="cnt_wrap">
+                <div class="tit" @click="toCourseList(0)">
+                    <h3>热门教程</h3>
+                    <div class="btn_more"></div>
+                </div>
+                <ul class="hot_box">
+                    <li v-for="course in courses">
+                      <div @click="toCourseArticleList(course.id)">
+                        <div class="view-content">
+                          <p class="info">{{course.title}}</p>
+                          <p class="sub_info">{{course.summary}}</p>
+                        </div>
+                      </div>
+                    </li>
+                </ul>
+            </div>          
+        </div>
+    </div>
+    <a id="href_true" style="display: none;"></a>
+<script>
+    var demo = new Vue({
+    	el: '#main',
+    	data: {
+            isBannerEmpty: false,
+            bannerList: bannerList,
+            courses: recommend_courses
+    	},
+        methods: {
+            toCourseList(id) {
+                data_href("courseList.html?type=" + id);
+            },
+            toCourseArticleList(id) {
+                data_href("articleList.html?id=" + id);
+            }
+        },
+    });
+	
+</script>
+</body>
+</html>
